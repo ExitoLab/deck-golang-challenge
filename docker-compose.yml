@@ -1,0 +1,35 @@
+version: "3"
+services:
+  mongodb:
+    image: mongo:6.0.5
+    container_name: mongodb
+    ports:
+      - '27100:27017'
+    volumes:
+      - "mongodbdata:/data/db1"
+    networks:
+      - host
+
+  api:
+    container_name: app
+    build:
+      context: .
+    ports:
+      - '8000:8000'
+    environment:
+      PORT: 8000
+      MONGODB_URL: mongodb
+      SECRET_KEY: 23339393938487484848492827378393939378373278383838373673738383=
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+    networks:
+      - host
+volumes:
+  mongodbdata:
+    driver: local
+
+networks:
+  host:
+    driver: bridge
